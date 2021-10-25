@@ -8,7 +8,7 @@ Game.config = {
   drawMsg: "This game is a draw.",
   winMsg: "The winner is: ",
   countToWin: 4,
-  api_endpoint : "http://127.0.0.1:5000/",
+  api_endpoint : "https://alphazero-connectfour.herokuapp.com/",
 
   // note: board dimensions are zero-indexed
   boardLength: 6,
