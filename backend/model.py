@@ -34,18 +34,20 @@ class PolicyValueNetwork(nn.Module):
         
 
         self.feature_Net = nn.Sequential(
-            nn.Conv2d(1,32,2,1),
+            nn.Conv2d(1,32,3,1,padding=1),
             nn.LeakyReLU(),
-            nn.Conv2d(32,32,2,1),
+            nn.BatchNorm2d(32),
+            nn.Conv2d(32,32,3,1,padding=1),
             nn.LeakyReLU(),
-            nn.Conv2d(32,32,2,1),
+            nn.Conv2d(32,32,3,1,padding=1),
             nn.LeakyReLU(),
-            nn.Conv2d(32,32,2,1),
+            nn.Conv2d(32,32,3,1,padding=1),
             nn.LeakyReLU(),
-            nn.Conv2d(32,32,2,1),
+            nn.Conv2d(32,32,3,1,padding=1),
             nn.LeakyReLU(),
+            nn.BatchNorm2d(32),
             nn.Flatten(),
-            nn.Linear(64, hidden_size),
+            nn.Linear(1344, hidden_size),
             nn.LeakyReLU()).float()
 
         self.policy = nn.Sequential(
@@ -73,7 +75,7 @@ class PolicyValueNetwork(nn.Module):
     
     def forward(self, obs):
         """
-        
+        Run a tensor board through the model
         """
 
         feature = self.feature_Net(obs)
@@ -85,7 +87,7 @@ class PolicyValueNetwork(nn.Module):
 
     def forward_no_grad(self, obs):
         """
-        
+        Run a numpy board through the model without keeping gradients 
         """
         
         board = torch.tensor(obs,device=self.device).float().unsqueeze(0).unsqueeze(0)

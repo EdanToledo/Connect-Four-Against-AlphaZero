@@ -34,9 +34,9 @@ class AlphaZero:
         """
         choose an action according to mcts algorithm - choose to use current or best weights
         """
-        
         current_player_board = self.game.get_perspective_board(board, player)
-
+        
+       
         if best:
             root = self.best_mcts.run(current_player_board, to_play=1,noise_weight=noise_weight)
         else:
@@ -47,6 +47,9 @@ class AlphaZero:
         return action
 
     def get_value(self,board,player):
+        """
+        get value from value network
+        """
         current_player_board = self.game.get_perspective_board(board,player)
 
         _ , value = self.model.forward_no_grad(current_player_board)
@@ -95,7 +98,7 @@ class AlphaZero:
 
     def train(self, episodes, epochs, batch_size, model_path, iterations, arena_games):
         """
-        Train agent
+        Train the agent
         """
 
         self.model.train()
@@ -157,7 +160,7 @@ class AlphaZero:
 
     def arena(self, no_games=100):
         """
-        plays no_games games using current model against best model - if current model wins more than 55 games it becomes the new best model.
+        plays no_games games using current model against best model - if current model wins rougly 55% of the games it becomes the new best model
         """
         wins = []
         for i in range(no_games):
@@ -168,7 +171,7 @@ class AlphaZero:
 
             while not game_over:
                 if turn == 0:
-                    col = self.act(board, 1, False)
+                    col = self.act(board, 1, False,1,0.25)
 
                     if self.game.is_valid_location(board, col):
                         row = self.game.get_next_open_row(board, col)
@@ -182,7 +185,7 @@ class AlphaZero:
 
                 else:
 
-                    col = self.act(board, -1, True)
+                    col = self.act(board, -1, True,1,0.25)
                     if self.game.is_valid_location(board, col):
                         row = self.game.get_next_open_row(board, col)
                         self.game.drop_piece(board, row, col, -1)
